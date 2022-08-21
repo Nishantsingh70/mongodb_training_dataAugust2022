@@ -100,6 +100,19 @@ mongos> sh.addShard("shard2rs/192.168.1.81:50004,192.168.1.81:50005,192.168.1.81
 mongos> sh.status()
 ```
 
+===================================================================
 For reading the data from secondary node use the below command:
 
 db.getMongo().setReadPref('secondaryPreferred')
+
+===================================================================
+First you have to enable the sharding by typing below command:
+
+sh.enableSharding("lw"); --lw is the database name and you have to type it in "".
+
+After typting this you have to define the shrading key for collections:
+
+sh.shardCollection("lw.person" , { "age": "hashed" });  -- lw is database and person is the collection table.
+After typing this you have to start inserting the data into person collection.
+
+
