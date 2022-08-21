@@ -101,11 +101,13 @@ mongos> sh.status()
 ```
 
 ===================================================================
+
 For reading the data from secondary node use the below command:
 
 db.getMongo().setReadPref('secondaryPreferred')
 
 ===================================================================
+
 First you have to enable the sharding by typing below command:
 
 sh.enableSharding("lw"); --lw is the database name and you have to type it in "".
