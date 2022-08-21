@@ -1,0 +1,36 @@
+Install MongoDB Community Edition
+
+Follow these steps to install MongoDB Community Edition using the yum package manager. Select the tab for your version of Amazon Linux:
+
+1) Configure the package management system (yum).
+
+Create a /etc/yum.repos.d/mongodb-org-6.0.repo file so that you can install MongoDB directly using yum:
+
+[mongodb-org-6.0]
+name=MongoDB Repository
+baseurl=https://repo.mongodb.org/yum/amazon/2/mongodb-org/6.0/x86_64/
+gpgcheck=1
+enabled=1
+gpgkey=https://www.mongodb.org/static/pgp/server-6.0.asc
+
+You can also download the .rpm files directly from the MongoDB repository
+
+. Downloads are organized by Amazon Linux version (e.g. 2), then MongoDB release version (e.g. 6.0), then architecture (e.g. x86_64).
+
+Prior to MongoDB 5.0, odd-numbered MongoDB release versions, such as 4.3, were development releases. Beginning with MongoDB 5.1, MongoDB has quarterly rapid releases. For more information on the differences between rapid and long-term support releases, see MongoDB Versioning.
+
+
+2) Install the MongoDB packages.
+
+To install the latest stable version of MongoDB, issue the following command:
+
+sudo yum install -y mongodb-org
+
+Alternatively, to install a specific release of MongoDB, specify each component package individually and append the version number to the package name, as in the following example:
+
+sudo yum install -y mongodb-org-6.0.1 mongodb-org-database-6.0.1 mongodb-org-server-6.0.1 mongodb-mongosh-6.0.1 mongodb-org-mongos-6.0.1 mongodb-org-tools-6.0.1
+
+You can specify any available version of MongoDB. However yum upgrades the packages when a newer version becomes available. To prevent unintended upgrades, pin the package. To pin a package, add the following exclude directive to your /etc/yum.conf file:
+
+exclude=mongodb-org,mongodb-org-database,mongodb-org-server,mongodb-mongosh,mongodb-org-mongos,mongodb-org-tools
+
