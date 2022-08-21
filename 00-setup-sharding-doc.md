@@ -99,3 +99,7 @@ Add shard
 mongos> sh.addShard("shard2rs/192.168.1.81:50004,192.168.1.81:50005,192.168.1.81:50006")
 mongos> sh.status()
 ```
+
+For reading the data from secondary node use the below command:
+
+db.getMongo().setReadPref('secondaryPreferred')
