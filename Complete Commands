@@ -1,0 +1,127 @@
+    1  yum install docker -y
+    2  yum start docker
+    3  systemctl  start docker
+    4  systemctl  status docker
+    5  docker images
+    6  docker pull ongo
+    7  docker pull mongo
+    8  docker images
+    9  docker run -dit --name mydb1 mongo
+   10  docker ps
+   11  docker ps -a
+   12  docker ps
+   13  docker exec -it mydb1 bash
+   14  docker ps
+   15  ifconfig
+   16  ip a
+   17  docker inspect mydb1
+   18  yum repolist
+   19  docker ps
+   20  docker rm -f mydb1
+   21  docker ps
+   22  docker run -dit --name mydb1 -p 4000:27017 mongo
+   23  docker ps
+   24* yum
+   25  ls
+   26  cd yum.repos.d/
+   27  ls
+   28  vim mongo.repo
+   29  yum repolist
+   30  yum install mongo
+   31  yum install mongosh
+   32  sudo yum install -y mongodb-org
+   33  mongosh
+   34  sudo yum install -y mongodb-org
+   35  ls
+   36  vim mongo.repo 
+   37  sudo yum install -y mongodb-org
+   38  mongosh
+   39  docker-compose
+   40  sudo curl -L https://github.com/docker/compose/releases/download/1.21.0/docker-compose-`uname -s`-`uname -m` | sudo tee /usr/local/bin/docker-compose > /dev/null
+   41  sudo chmod +x /usr/local/bin/docker-compose
+   42  docker-compose
+   43  cd ../..
+   44  ls
+   45  vim configserver.yaml
+   46  cat configserver.yaml 
+   47  docker-compose -f configserver.yaml -d u
+   48  docker-compose -f configserver.yaml -d up
+   49  docker-compose -f configserver.yaml up
+   50  docker ps
+   51  docker rm -f mydb1
+   52  docker ps
+   53  docker ps -a
+   54  docker rm -f (docker ps -a)
+   55  docker rm -f $(docker ps -a)
+   56  docker ps -a
+   57  docker-compose -f configserver.yaml -help
+   58  docker-compose -f configserver.yaml 
+   59  docker-compose -f configserver.yaml up -d
+   60  docker ps -a
+   61  docker ps
+   62  mongo mongodb://65.0.81.54:40001
+   63  mongo
+   64  sudo curl -L https://github.com/docker/compose/releases/download/1.21.0/docker-compose-`uname -s`-`uname -m` | sudo tee /usr/local/bin/docker-compose > /dev/null
+   65  sudo chmod +x /usr/local/bin/docker-compose
+   66  yum install mongo
+   67  yum install mongodb
+   68  systemctl status mongodb
+   69  systemctl start mongodb
+   70  ps -aux | grep mongo
+   71  systemctl start mongod
+   72  systemctl status mongod
+   73  mongo
+   74  mongosh mongodb://65.0.81.54:40001
+   75  docker ps
+   76  ls
+   77  vim shard1.yml
+   78  docker-compose -f shard1.yml up -d
+   79  docker ps
+   80  mongosh mongodb://65.0.81.54:50001
+   81  docker ps
+   82  ls
+   83  vim shard2.yml
+   84  docker-compose -f shard2.yml up -d
+   85  free -m
+   86  docker ps
+   87  mongosh mongodb://65.0.81.54:50004
+   88  ls
+   89  docker ps
+   90  free -m
+   91  mongosh mongodb://65.0.81.54:50004
+   92  mongosh mongodb://65.0.81.54:50005
+   93  ls
+   94  vim client.yml
+   95  docker-compose -f client.yml up -d
+   96  docker ps
+   97  mongosh mongodb://65.0.81.54:60000
+   98  ls
+   99  docker ps
+  100  docker-compose ls
+  101  docker-compose list
+  102  docker-compose ps
+  103  docker-compose.yml ps
+  104  docker-compose ps
+  105  docker ps
+  106  ls
+  107  cat client.yml 
+  108  mongosh mongodb://65.0.81.54:60000
+  109  docker ps
+  110  mongosh mongodb://65.0.81.54:60000
+  111  docker ps
+  112  mongosh mongodb://65.0.81.54:50001
+  113  mongosh mongodb://65.0.81.54:50004
+  114  mongosh mongodb://65.0.81.54:50005
+  115  mongosh mongodb://65.0.81.54:60000
+  116  docker ps
+  117  mongosh mongodb://65.0.81.54:50001
+  118  mongosh mongodb://65.0.81.54:50004
+  119  mongosh mongodb://65.0.81.54:60000
+  120  mongosh mongodb://65.0.81.54:50005
+  121  mongosh mongodb://65.0.81.54:60000
+  122  mongosh mongodb://65.0.81.54:50005
+  123  mongosh mongodb://65.0.81.54:50001
+  124  mongosh mongodb://65.0.81.54:50004
+  125  mongosh mongodb://65.0.81.54:60000
+  126  mongosh mongodb://65.0.81.54:50001
+  127  mongosh mongodb://65.0.81.54:60000
