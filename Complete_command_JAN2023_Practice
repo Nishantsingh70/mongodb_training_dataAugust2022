@@ -1,0 +1,96 @@
+    1  yum install docker -y
+    2  systemctl enable --now docker
+    3  systemctl status docker
+    4  docker images
+    5  docker pull mongo
+    6  sudo yum install -y mongodb-org
+    7  yum install mongosh
+    8  sudo curl -L https://github.com/docker/compose/releases/download/1.21.0/docker-compose-`uname -s`-`uname -m` | sudo tee /usr/local/bin/docker-compose > /dev/null
+    9  docker compose
+   10  sudo chmod +x /usr/local/bin/docker-compose
+   11  docker-compose
+   12  docker-compose ls
+   13  docker-compose ps
+   14  ifconfig
+   15  yum install docker -y
+   16  systemctl status docker
+   17  docker images
+   18  docker pull mongo
+   19  docker run -dit --name mydb1 mongo
+   20  docker ps
+   21  docker exec -it mydb1 bash
+   22  docker ps
+   23  history
+   24  docker inspect mydb1
+   25  ping 172.17.0.2
+   26  vim /etc/yum.repos.d/
+   27  cd /etc/yum.repos.d/
+   28  ls
+   29  vim mongo.repo
+   30  yum repolist
+   31  yum install mongodb-org
+   32  mongosh
+   33  mongosh 172.17.0.2
+   34  cd
+   35  history
+   36  docker ps
+   37  docker rm -f mydb1
+   38  docker run -dit  --name mydb1 -p 4000:27017 mongo
+   39  docker ps
+   40  netstat -tnlp
+   41  history
+   42  docker rm -f mydb1
+   43  docker ps
+   44  sudo curl -L https://github.com/docker/compose/releases/download/1.21.0/docker-compose-`uname -s`-`uname -m` | sudo tee /usr/local/bin/docker-compose > /dev/null
+   45  sudo chmod +x /usr/local/bin/docker-compose
+   46  docker-compose version
+   47  history
+   48  mkdir mongo_cluster_ws
+   49  ls
+   50  cd mongo_cluster_ws/
+   51  vim mongo_config.yml
+   52  docker-compose -f mongo_config.yml up -d
+   53  docker ps
+   54  mongo mongodb://13.127.69.171:40001
+   55  ls
+   56  mongo_shard1.yml
+   57  vim mongo_shard1.yml
+   58  ls
+   59  docker-compose -f mongo_shard1.yml up -d
+   60  docker ps
+   61  mongo mongodb://13.127.69.171:50001
+   62  docker ps
+   63  mongo mongodb://13.127.69.171:50002
+   64  mongo mongodb://13.127.69.171:50001
+   65  mongo mongodb://13.127.69.171:50002
+   66  ls
+   67  vim mongo_shard2.yml
+   68  ls
+   69  docker-compose -f mongo_shard2.yml up -d
+   70  docker ps
+   71  docker-compose ls
+   72  docker-compose ps
+   73  docker ps
+   74  mongo mongodb://aws_instance_ip:50004
+   75  mongo mongodb://13.127.69.171:50004
+   76  mongo mongodb://13.127.69.171:50005
+   77  history
+   78  docker ps
+   79  ls
+   80  vim mongo_route.yml
+   81  cat mongo_route.yml 
+   82  vim mongo_route.yml
+   83  cat mongo_route.yml 
+   84  docker ps
+   85  docker-compose -f mongo_route.yml up -d
+   86  docker ps
+   87  mongo mongodb://13.127.69.171:60000
+   88  ls
+   89  docker ps
+   90  free -m
+   91  mongo mongodb://13.127.69.171:60000
+   92  dockr ps
+   93  docker ps
+   94  mongo mongodb://13.127.69.171:50001
+   95  mongo mongodb://13.127.69.171:50004
+   96  docker ps
