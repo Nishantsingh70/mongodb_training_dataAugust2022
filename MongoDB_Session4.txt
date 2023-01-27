@@ -1,0 +1,47 @@
+Session4 =>
+
+Insert duplicate values:
+
+use mynewdb
+db.myc.insertMany([{_id: 1111, name: "vimal"},{_id: 2222, name: "nishant"},{_id: 3333, name: "abhi"}]);
+db.myc.insert({_id: 1111, name: "Ram"});
+db.myc.insertMany([{_id: 4445, name: "vimal"},{_id: 4445, name: "nishant"},{_id: 4444, name: "abhi"}], {ordered: false});
+db.myc.find()
+
+db.myc.insertOne({name: "eric"});
+db.myc.find()
+
+writeconcern => 
+      DB Client => MongoDB server  => MongoDB Engine  => RAM => HD (Database)
+	  if we have 3 document in ram which is going to sync with HD(DB) but if one document synced successfully after that
+	  some reboot happen and then the other 2 document in the RAM will remove so this is the writeconcern situation.
+	  becuase of this concern HD(DB) send acknowledgement after sync the data with HD (DB).
+	  
+acknowledgement: it will impact the performance also.
+
+ db.myc.insertOne({name: "bob"}, {writeConcern: { w: 0}}); => disable acknowledgement
+ db.myc.insertOne({name: "bob"}, {writeConcern: { w: 1}}); => bydefault enable acknowledgement
+ 
+journaling: where one database to store instructions and one database for storing data.
+
+db.myc.insertOne({name: "bob"}, {writeConcern: { w: 0, j: false}}); => bydefault disable journaling
+db.myc.insertOne({name: "bob"}, {writeConcern: { w: 0, j: true}});  => enable journaling
+
+db.myc.insertOne({name: "bob"}, {writeConcern: { w: 0, j: true, wtimeout: 200}}); => timeout
+
+import new dataset
+mongoimport array-data.json -d myunwind -c myc --jsonArray
+
+use myunwind
+show collections
+db.myc.find()
+db.myc.aggregate([ { $group: { _id: {myage: "$age"}, count: {$sum: 1}}}])
+db.myc.aggregate([{ $unwind: "$hobbies"}])
+
+db.myc.aggregate([{ $unwind: "$hobbies"}, { $group: { _id: {myhobbies: "$hobbies"}, count: {$sum: 1}}}])
+
+db.myc.aggregate([{ $unwind: "$hobbies"}, { $group: { _id: {myage: "$age"}, count: {$push: "$hobbies"}}}]) => give hobbies based on age group.
+
+db.myc.aggregate([{ $unwind: "$hobbies"}, { $group: { _id: {myage: "$age"}, count: {$addToSet: "$hobbies"}}}]) => give hobbies based on age group but not give duplicate hobbies.
+
+ db.myc.aggregate([ { $project: { _id: 0, numScores: { $size: "$examScores" } } }]) => give the size of exams per document.

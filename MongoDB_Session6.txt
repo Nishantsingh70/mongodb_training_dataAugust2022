@@ -1,0 +1,86 @@
+Session6 =>
+
+capped concept => Limit the size of the document.
+
+use lwdb;
+db.createCollection("student", {capped: true, size: 10200, max: 4});
+db.student.isCapped()
+
+db.student.find()
+db.student.insertOne({"name": "a"});
+db.student.insertOne({"name": "b"});
+db.student.insertOne({"name": "c"});
+db.student.insertOne({"name": "d"});
+
+db.student.find()
+
+If we insert one more record then oldest record will delete.
+
+db.student.insertOne({"name": "e"});
+
+db.student.find().sort({$name: -1}) (This will not work here)
+db.student.find().sort({$natural: -1}) => perform sort 
+
+use mypersondb;
+show collections;
+db.persons.find()
+db.persons.find({"dob.age": 47}).count()
+
+ db.persons.explain().find({"dob.age": 47})
+ 
+** Important: here you have to check totalDocsExamined: & stage: parameters under executionStats: 
+   db.persons.explain("executionStats").find({"dob.age": 47}) => here you have to check totalDocsExamined: & stage: parameters under executionStats: 
+ 
+** nReturned: & executionTimeMillis: check these paramteres also under executionStats:.
+   db.persons.explain("executionStats").find({"dob.age": {$gt: 47}}).count()
+   db.persons.explain("executionStats").find({"dob.age": {$gt: 47}})  
+
+** Create Index
+   db.persons.createIndex({"dob.age": 1});
+   
+** check stage: 'IXSCAN' , nReturned:, executionTimeMillisEstimate: & totalDocsExamined: parameters under executionStats:
+   db.persons.explain("executionStats").find({"dob.age": {$gt: 47}})
+   
+** Drop any index.
+    db.persons.dropIndex({"dob.age": 1});
+    db.persons.explain("executionStats").find({"dob.age": {$gt: 47}}) => now it will scan all documents. check totalDocsExamined: parameter under executionStats:
+
+*  db.persons.explain("executionStats").find({"dob.age":46, gender: "male"})
+
+** Create Compound index:
+   db.persons.createIndex({"dob.age": 1, "gender": 1});
+   
+   db.persons.explain("executionStats").find({"dob.age":46, gender: "male"}) => here you have to check totalDocsExamined: & stage: parameters under executionStats:
+   or 
+   db.persons.explain("executionStats").find({"gender": "male","dob.age":46}) => here you have to check totalDocsExamined: & stage: parameters under executionStats:
+   
+   db.persons.explain("executionStats").find({"gender": "male"}) => here you have to check totalDocsExamined: & stage: parameters under executionStats:
+
+** check the indexes on particular collection:
+   db.persons.getIndexes()
+   
+   
+** Create index on unique email ids:
+   db.persons.createIndex({"email": 1}, {unique: true}); 
+
+================================================================
+
+*** TTL => Time to live
+     db.c1.insert({name: "a", createAt: new Date()});
+	 db.c1.find()
+	 
+	 db.c1.insert({name: "b", createAt: new Date()});
+	 db.c1.insert({name: "c", createAt: new Date()});
+     db.c1.find()
+	 
+ ** Create Index on Date
+      ** because of this index any document stay only 100 seconds in that collection after 100 sec it will remove.
+	  
+      db.c1.createIndex({createAt: 1}, {expireAfterSeconds: 100}) => because of this index any document stay only 100 seconds in that collection after 100 sec it will remove.
+	  db.c1.getIndexes()
+	  
+	  new Date();
+	  
+	  db.c1.insert({name: "d", createAt: new Date()});
+   
+mongo lookup for joining collections but mongodb is used for storing denormalize the data.

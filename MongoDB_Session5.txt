@@ -1,0 +1,298 @@
+Session5 =>
+
+Distributed Read => Read Replica
+   read the data from different different nodes and data also stored in different different nodes.
+   
+ If we store the same information in all nodes then there is no performance issue solution.
+ If documents is in billion range in collection then storing it in all node is a challenege & it will not solve any performance issue.
+ 
+Sharding => store the data in some range in all the nodes. we can use modulus function to store the data in nodes.
+Sharding keys
+
+Sharding does not give durability because we are storing data in nodes based on some range. 
+   Main Node => Node 1(some document store here) + 
+                Node 2(some document store here) + 
+				Node 3(some document store here)
+
+Replica Set => where you distributed your reads and maintain durability.
+   Main Node => Node 1(some document store here)
+                    Node 1.i    (Primary)
+                    Node 1.ii   (Secondary)
+                    Node 1.iii	(Secondary)				
+				+ 
+                Node 2(some document store here)
+                    Node 2.i    (Primary)
+                    Node 2.ii   (Secondary)
+                    Node 2.iii	(Secondary)			
+				+ 
+				Node 3(some document store here)
+				    Node 3.i    (Primary)
+                    Node 3.ii   (Secondary)
+                    Node 3.iii  (Secondary)
+
+https://techviewleo.com/how-to-install-mongodb-on-amazon-linux/
+
+
+rs.initiate(
+  {
+    _id: "cfgrs",
+    configsvr: true,
+    members: [
+      { _id : 0, host : "13.127.69.171:40001" },
+      { _id : 1, host : "13.127.69.171:40002" },
+      { _id : 2, host : "13.127.69.171:40003" }
+    ]
+  }
+)
+
+rs.status()
+
+Mongo Shard1 Setup:
+
+rs.initiate(
+  {
+    _id: "shard1rs",
+    members: [
+      { _id : 0, host : "13.127.69.171:50001" },
+      { _id : 1, host : "13.127.69.171:50002" },
+      { _id : 2, host : "13.127.69.171:50003" }
+    ]
+  }
+)
+
+rs.status()
+
+rs.initiate(
+  {
+    _id: "shard2rs",
+    members: [
+      { _id : 0, host : "13.127.69.171:50004" },
+      { _id : 1, host : "13.127.69.171:50005" },
+      { _id : 2, host : "13.127.69.171:50006" }
+    ]
+  }
+)
+
+rs.status()
+
+version: '3'
+
+services:
+
+  mongos:
+    container_name: mongos
+    image: mongo
+    command: mongos --configdb cfgrs/13.127.69.171:40001,13.127.69.171:40002,13.127.69.171:40003 --bind_ip 0.0.0.0 --port 27017
+    ports:
+      - 60000:27017
+	  
+ sh.addShard("shard1rs/13.127.69.171:50001,13.127.69.171:50002,13.127.69.171:50003")
+ sh.addShard("shard2rs/13.127.69.171:50004,13.127.69.171:50005,13.127.69.171:50006")
+ 
+ =======================================================================================================================================================
+ 
+ 
+   15  yum install docker -y
+   16  systemctl status docker
+   17  docker images
+   18  docker pull mongo
+   19  docker run -dit --name mydb1 mongo
+       inside container:
+          ps -aux
+          mongosh
+          
+   20  docker ps
+   21  docker exec -it mydb1 bash
+   22  docker ps
+   23  history
+   24 docker inspect mydb1
+   25  ping 172.17.0.2
+   26  vim /etc/yum.repos.d/
+   27  cd /etc/yum.repos.d/
+   28  ls
+   29  vim mongo.repo
+   
+   https://techviewleo.com/how-to-install-mongodb-on-amazon-linux/
+      [mongodb-org-5.0]
+       name=MongoDB Repository
+       baseurl=https://repo.mongodb.org/yum/amazon/2/mongodb-org/5.0/x86_64/
+       gpgcheck=1
+       enabled=1
+       gpgkey=https://www.mongodb.org/static/pgp/server-5.0.asc
+   
+   
+   30  yum repolist
+   31  yum install mongodb-org
+   32  mongosh
+   33  mongosh 172.17.0.2
+   34  cd
+   35  history
+   36  docker ps
+   37  docker rm -f mydb1
+   38  docker run -dit  --name mydb1 -p 4000:27017 mongo
+   39  docker ps
+   40  netstat -tnlp
+   
+    Note:  Open window cmd then hit mongosh aws_instance_ip:4000
+    
+   44  sudo curl -L https://github.com/docker/compose/releases/download/1.21.0/docker-compose-`uname -s`-`uname -m` | sudo tee /usr/local/bin/docker-compose > /dev/null
+   45  sudo chmod +x /usr/local/bin/docker-compose
+   46  docker-compose version
+   
+  ====================================================================== 
+  Mongo Config setup:
+  
+   * mkdir mongo_cluster_ws
+   * cd mongo_cluster_ws
+   * vim mongo_config.yml
+       check reference: https://github.com/Nishantsingh70/mongodb_training_dataAugust2022/blob/master/config-server/docker-compose.yaml
+       
+   * docker-compose -f file_name up -d
+   * mongo mongodb://aws_instance_ip:40001
+  
+ Inside mongo shell:
+      reference: https://github.com/Nishantsingh70/mongodb_training_dataAugust2022/blob/master/00-setup-sharding-doc.md
+ 
+ * rs.status()
+ * rs.initiate(
+  {
+    _id: "cfgrs",
+    configsvr: true,
+    members: [
+      { _id : 0, host : "aws_instance_ip:40001" },
+      { _id : 1, host : "aws_instance_ip:40002" },
+      { _id : 2, host : "aws_instance_ip:40003" }
+    ]
+  }
+)
+
+* rs.status()
+
+========================================================================= 
+Shard1 setup: 
+* vim mongo_shard1.yml
+  reference : https://github.com/Nishantsingh70/mongodb_training_dataAugust2022/blob/master/shard1/docker-compose.yaml
+  reference: https://github.com/Nishantsingh70/mongodb_training_dataAugust2022/blob/master/00-setup-sharding-doc.md
+  
+* docker-compose -f file_name up -d
+* mongo mongodb://aws_instance_ip:50001
+
+* rs.status()
+* rs.initiate(
+  {
+    _id: "shard1rs",
+    members: [
+      { _id : 0, host : "aws_instance_ip:50001" },
+      { _id : 1, host : "aws_instance_ip:50002" },
+      { _id : 2, host : "aws_instance_ip:50003" }
+    ]
+  }
+)
+
+* rs.status()
+ 
+ IMPORTANT: Now you can insert one record in primary shard1 and check in the secondary node of shard1. bydefault you can't see anything there.
+ You have to run one command for checking data in the secondary node of shard1.(you can only read the data in secondary node)
+ 
+ * rs.secondaryOk() or
+   rs.slaveOk()
+  
+===========================================================
+ Shard2 setup: 
+* vim mongo_shard2.yml
+    reference: https://github.com/Nishantsingh70/mongodb_training_dataAugust2022/blob/master/shard2/docker-compose.yaml
+    reference: https://github.com/Nishantsingh70/mongodb_training_dataAugust2022/blob/master/00-setup-sharding-doc.md
+ 
+* docker-compose -f file_name up -d
+* mongo mongodb://aws_instance_ip:50004
+
+* rs.status()
+
+* rs.initiate(
+  {
+    _id: "shard2rs",
+    members: [
+      { _id : 0, host : "aws_instance_ip:50004" },
+      { _id : 1, host : "aws_instance_ip:50005" },
+      { _id : 2, host : "aws_instance_ip:50006" }
+    ]
+  }
+)
+
+* rs.status()
+
+IMPORTANT: Now you can insert one record in primary shard1 and check in the secondary node of shard1. bydefault you can't see anything there.
+ You have to run one command for checking data in the secondary node of shard1.(you can only read the data in secondary node)
+ 
+ ======================================================
+ Now you have to setup mongodb router
+ 
+ * vim mongo_route.yml
+  reference: https://github.com/Nishantsingh70/mongodb_training_dataAugust2022/blob/master/mongos/docker-compose.yaml
+  version: '3'
+  services:
+  mongos:
+    container_name: mongos
+    image: mongo
+    command: mongos --configdb cfgrs/aws_instance_ip:40001,aws_instance_ip:40002,aws_instance_ip:40003 --bind_ip 0.0.0.0 --port 27017
+    ports:
+      - 60000:27017
+ 
+ Router system:
+      
+ * docker-compose -f file_path_name up -d
+ * mongo mongodb://aws_instance_ip:60000
+ * rs.status()
+ * sh.status()
+ 
+ Add the shard details to route server.
+
+ Add shard1:
+ * sh.addShard("shard1rs/192.168.1.81:50001,192.168.1.81:50002,192.168.1.81:50003")
+ * sh.status()
+ 
+ Add shard2:
+ * sh.addShard("shard2rs/13.127.69.171:50004,13.127.69.171:50005,13.127.69.171:50006")
+ * sh.status()
+ 
+ * use test;
+ * db.testing.insert({"name": "abhi"})
+ * db.testing.insert({"name": "ayat"})
+ * db.testing.insert({"name": "nisahnt"})
+ * db.testing.insert({"name": "nitya"})
+ * db.testing.insert({"name": "raj"})
+ * db.testing.insert({"name": "rajat"})
+ * db.testing.insert({"name": "yash"})
+ * db.testing.insert({"name": "dev"})
+ * db.testing.insert({"name": "ankita"})
+ * db.testing.insert({"name": "harsh"})
+ 
+ * db.testing.find()
+ 
+ Enable Sharding:
+ =======================
+ 
+ How to check sharding is enable from router system.
+* db.testing.getShardDistribution()
+
+* db.testing.explain().find() => To check where data is sharding.
+* sh.shardCollection("test.test" , { "name": "hashed" });
+* db.test.getShardDistribution()  => Here you can see the sharding details of documents count.
+ 
+ ====================================
+ 
+  
+ * use test;
+ * db.test.insert({"name": "abhi"})
+ * db.test.insert({"name": "ayat"})
+ * db.test.insert({"name": "nisahnt"})
+ * db.test.insert({"name": "nitya"})
+ * db.test.insert({"name": "raj"})
+ * db.test.insert({"name": "rajat"})
+ * db.test.insert({"name": "yash"})
+ * db.test.insert({"name": "dev"})
+ * db.test.insert({"name": "ankita"})
+ * db.test.insert({"name": "harsh"})
+ 
+ * db.test.find()
+ * db.test.getShardDistribution()  => Here you can see the sharding details of documents count.

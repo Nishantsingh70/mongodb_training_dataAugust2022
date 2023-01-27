@@ -1,0 +1,108 @@
+{ "name": "nishant", "mob": 1111, "remark":"Ok" }
+
+{ "name": "tom", "mob": 2222, "remark":"Good" }
+
+{ "name": "vimal", "mob": 3333, "remark":"Fine" }
+
+net start mongodb
+
+Per document size is 16MB bydefault.
+
+mongo sh build on the top of javascript so you can run any javascript command/program on mongo shell.
+example: console.log("Hello")
+
+Session2 => 
+
+use lwuser;
+db.createCollection("students");
+show collections;
+db.students.insertOne({"name":"harry", "phone":1111,"purchased_courses": {"course_name": "MERN", "price": 2300}});
+db.students.insertOne({"name":"abhi", "phone":2222,"purchased_courses": [{"course_name": "MERN", "price": 2300}, {"course_name": "DevOps", "price": 2500}]});
+db.students.insertOne({"name":"yash", "phone":3333,"purchased_courses": {"course_name": "MlOps", "price": 2400}, "contact": {"Whatsapp": 33333333}});
+db.students.find({"purchased_courses.course_name": "MlOps"})
+db.students.find({"purchased_courses.course_name": "MlOps"}, {"name": 1})
+db.students.find({"purchased_courses.course_name": "MlOps"}, {"name": 1,"phone":1,"contact": 1 ,_id:0})
+
+db.students.insertMany(
+[
+{
+   "name":"ravi", 
+   "phone":4444,
+   "purchased_courses": {"course_name": "Security", "price": 2800}, 
+   "contact": {"Whatsapp": 4444444}
+},
+   
+{
+    "name":"lakshman", 
+	"phone":5555,
+	"purchased_courses": {"course_name": "MlOps", "price": 2400}, 
+	"contact": {"Whatsapp": 555555}
+},
+{
+    "name":"vimal", 
+	"phone":6666,
+	"purchased_courses": [{"course_name": "MERN", "price": 2700}, 
+	                      {"course_name": "cloud", "price": 2600}]
+}
+]
+);
+
+db.students.find()
+db.students.find().pretty()
+
+
+Object _id is the combination of timestamp(4 bytes), Machine ID (3 bytes), Process ID (2 bytes) & Incremental value (3 bytes).
+
+projection concept:
+db.students.find({"name": "yash"}).pretty()
+db.students.find({}, {"name": 1,"phone": 1 ,_id: 0}).pretty()
+db.students.find({}, {name: 1,phone: 1 ,_id: 0}).pretty()
+
+db.test.insertMany(
+[
+{"name": "a"},
+{"name": "b"},
+{"name": "c"},
+{"name": "d"},
+{"name": "e"},
+{"name": "f"},
+{"name": "g"},
+{"name": "d"},
+{"name": "i"},
+{"name": "j"},
+{"name": "b"},
+{"name": "l"},
+{"name": "m"},
+{"name": "n"},
+{"name": "o"},
+{"name": "a"},
+{"name": "d"},
+{"name": "r"},
+{"name": "s"},
+{"name": "c"},
+{"name": "u"}
+]
+);
+
+db.test.find()
+
+find(cursor/loop) give only 20 records, so use it for next records.
+
+forEach:
+
+db.test.find().forEach( (ref) => {printjson(ref)});
+db.test.find().forEach( (ref) => {print(ref)});
+
+findOne give address and fetch the data but find does not go any address it will take reference of cursor/loop.
+
+db.students.find({}, {name: 1, phone: 1 ,_id: 0}).name => nothing will come in output.
+db.students.findOne({}, {name: 1, phone: 1 ,_id: 0}).name => It will return first name.
+
+db.students.findOne({"name":"harry"}).purchased_courses.price
+db.students.findOne({}).name
+db.students.findOne({}).purchased_courses
+
+
+ 
+
+
