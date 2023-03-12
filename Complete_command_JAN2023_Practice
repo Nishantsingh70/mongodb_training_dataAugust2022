@@ -89,7 +89,7 @@
    89  docker ps
    90  free -m
    91  mongo mongodb://13.127.69.171:60000
-   92  dockr ps
+   92  docker ps
    93  docker ps
    94  mongo mongodb://13.127.69.171:50001
    95  mongo mongodb://13.127.69.171:50004
